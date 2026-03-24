@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dash8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        :root { font-family: 'Inter', sans-serif; }
+        @supports (font-variation-settings: normal) {
+            :root { font-family: 'Inter var', sans-serif; }
+        }
+    </style>
+</head>
+<body style="background: #edf2f7;">
+
+<div class="bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white">
+    <div class="flex relative w-screen">
+
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/sidebar :: sidebar(${activeMenu})}"></div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex flex-col flex-1 w-full min-h-screen">
+
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm px-8 py-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-700">Dashboard</h2>
+                    <p class="text-sm text-slate-400">Resumen general del sistema bancario</p>
+                </div>
+                <div class="text-sm text-slate-500" id="currentDate"></div>
+            </header>
+
+            <!-- Main -->
+            <main class="p-8">
+
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+                    <!-- Clientes -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 flex items-center space-x-4 border border-slate-100">
+                        <div class="p-3 bg-blue-100 rounded-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-blue-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-400 font-medium">Total Clientes</p>
+                            <p class="text-3xl font-bold text-slate-700" th:text="${totalClientes}">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Cuentas -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 flex items-center space-x-4 border border-slate-100">
+                        <div class="p-3 bg-emerald-100 rounded-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-emerald-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-400 font-medium">Total Cuentas</p>
+                            <p class="text-3xl font-bold text-slate-700" th:text="${totalCuentas}">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Transacciones -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 flex items-center space-x-4 border border-slate-100">
+                        <div class="p-3 bg-violet-100 rounded-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-violet-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-400 font-medium">Total Transacciones</p>
+                            <p class="text-3xl font-bold text-slate-700" th:text="${totalTransacciones}">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Préstamos -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 flex items-center space-x-4 border border-slate-100">
+                        <div class="p-3 bg-orange-100 rounded-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-orange-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-400 font-medium">Total Préstamos</p>
+                            <p class="text-3xl font-bold text-slate-700" th:text="${totalPrestamos}">0</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Quick Access to Reports -->
+                <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-700">Reportes Disponibles</h3>
+                            <p class="text-sm text-slate-400">Genera reportes de transacciones en PDF o Excel</p>
+                        </div>
+                        <a th:href="@{/reportes}"
+                           class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1">
+                            <span>Ver todos los filtros</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                        <!-- PDF sin filtros -->
+                        <a th:href="@{/api/reportes/transacciones/pdf}"
+                           class="flex items-center space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-200 hover:bg-red-50 hover:border-red-200 transition-all group">
+                            <div class="p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
+                                <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-700 text-sm">Transacciones PDF</p>
+                                <p class="text-xs text-slate-400">Todas las transacciones</p>
+                            </div>
+                        </a>
+
+                        <!-- Excel sin filtros -->
+                        <a th:href="@{/api/reportes/transacciones/excel}"
+                           class="flex items-center space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all group">
+                            <div class="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
+                                <svg class="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-700 text-sm">Transacciones Excel</p>
+                                <p class="text-xs text-slate-400">Todas las transacciones</p>
+                            </div>
+                        </a>
+
+                        <!-- Con filtros -->
+                        <a th:href="@{/reportes}"
+                           class="flex items-center space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-200 hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                            <div class="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-700 text-sm">Reporte con Filtros</p>
+                                <p class="text-xs text-slate-400">Cuenta, tipo, fechas</p>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+</script>
+
+</body>
+</html>

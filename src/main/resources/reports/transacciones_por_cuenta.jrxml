@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+    "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport
+    xmlns="http://jasperreports.sourceforge.net/jasperreports"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+        http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+    name="transacciones_por_cuenta"
+    pageWidth="595"
+    pageHeight="842"
+    columnWidth="535"
+    leftMargin="30"
+    rightMargin="30"
+    topMargin="30"
+    bottomMargin="30"
+    language="java">
+
+    <!-- Fuente Unicode para soportar tildes, ñ y caracteres especiales -->
+    <property name="net.sf.jasperreports.default.font.name"     value="DejaVu Sans"/>
+    <property name="net.sf.jasperreports.default.pdf.font.name" value="DejaVu Sans"/>
+    <property name="net.sf.jasperreports.default.pdf.encoding"  value="Identity-H"/>
+    <property name="net.sf.jasperreports.default.pdf.embedded"  value="true"/>
+
+    <!-- Filtros del reporte (todos opcionales) -->
+    <parameter name="numeroCuenta"     class="java.lang.String"/>
+    <parameter name="fechaInicio"       class="java.sql.Date"/>
+    <parameter name="fechaFin"          class="java.sql.Date"/>
+    <parameter name="tipo"              class="java.lang.String"/>
+    <!-- Etiquetas para mostrar en el encabezado del reporte -->
+    <parameter name="fechaInicioLabel"  class="java.lang.String"/>
+    <parameter name="fechaFinLabel"     class="java.lang.String"/>
+
+    <!-- Query principal -->
+    <queryString language="SQL">
+        <![CDATA[
+            SELECT
+                C.NOMBRE || ' ' || C.APELLIDO AS CLIENTE,
+                CU.NUMERO_CUENTA,
+                T.TIPO,
+                T.MONTO,
+                T.FECHA
+            FROM CLIENTES C
+            JOIN CUENTAS CU ON C.ID_CLIENTE = CU.ID_CLIENTE
+            JOIN TRANSACCIONES T ON CU.ID_CUENTA = T.ID_CUENTA
+            WHERE ('' = $P{numeroCuenta} OR CU.NUMERO_CUENTA = $P{numeroCuenta})
+              AND ('' = $P{tipo}          OR T.TIPO           = $P{tipo})
+              AND T.FECHA BETWEEN $P{fechaInicio} AND $P{fechaFin}
+            ORDER BY T.FECHA DESC
+        ]]>
+    </queryString>
+
+    <!-- Campos del resultado -->
+    <field name="CLIENTE"        class="java.lang.String"/>
+    <field name="NUMERO_CUENTA"  class="java.lang.String"/>
+    <field name="TIPO"           class="java.lang.String"/>
+    <field name="MONTO"          class="java.math.BigDecimal"/>
+    <field name="FECHA"          class="java.util.Date"/>
+
+    <!-- Variable: total de montos -->
+    <variable name="TOTAL_MONTO" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{MONTO}]]></variableExpression>
+    </variable>
+
+    <!-- =============== TITLE =============== -->
+    <title>
+        <band height="80">
+            <rectangle>
+                <reportElement x="0" y="0" width="535" height="75" backcolor="#1565C0" forecolor="#1565C0"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="5" width="535" height="28" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[REPORTE DE TRANSACCIONES]]></text>
+            </staticText>
+            <!-- Fila 1: Cuenta y Tipo -->
+            <textField isBlankWhenNull="false">
+                <reportElement x="0" y="34" width="267" height="16" forecolor="#BBDEFB"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["  Cuenta: " + ("".equals($P{numeroCuenta}) ? "Todas" : $P{numeroCuenta})]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="false">
+                <reportElement x="267" y="34" width="268" height="16" forecolor="#BBDEFB"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Tipo: " + ("".equals($P{tipo}) ? "Todos" : $P{tipo})]]></textFieldExpression>
+            </textField>
+            <!-- Fila 2: Rango de fechas -->
+            <textField isBlankWhenNull="false">
+                <reportElement x="0" y="52" width="535" height="16" forecolor="#BBDEFB"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["  Per\u00edodo: " + $P{fechaInicioLabel} + " al " + $P{fechaFinLabel}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <!-- =============== PAGE HEADER =============== -->
+    <pageHeader>
+        <band height="22">
+            <textField>
+                <reportElement x="0" y="0" width="280" height="20" forecolor="#555555"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Fecha de generación: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="0" width="255" height="20" forecolor="#555555"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageHeader>
+
+    <!-- =============== COLUMN HEADER =============== -->
+    <columnHeader>
+        <band height="28">
+            <rectangle>
+                <reportElement x="0" y="0" width="535" height="26" backcolor="#1976D2" forecolor="#1976D2"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="0"   y="0" width="150" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[  CLIENTE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="0" width="100" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[N° CUENTA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="250" y="0" width="85"  height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TIPO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="335" y="0" width="100" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[MONTO  ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="435" y="0" width="100" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FECHA]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- =============== DETAIL =============== -->
+    <detail>
+        <band height="22" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="535" height="21"
+                    backcolor="#E3F2FD" forecolor="#E3F2FD">
+                    <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+                </reportElement>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <textField isStretchWithOverflow="true">
+                <reportElement x="0"   y="0" width="150" height="20"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA["  " + $F{CLIENTE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="150" y="0" width="100" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{NUMERO_CUENTA}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="0" width="85"  height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="335" y="0" width="100" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
+            </textField>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="435" y="0" width="100" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+            </textField>
+            <!-- línea separadora -->
+            <line>
+                <reportElement x="0" y="21" width="535" height="1" forecolor="#BBDEFB"/>
+            </line>
+        </band>
+    </detail>
+
+    <!-- =============== SUMMARY =============== -->
+    <summary>
+        <band height="40">
+            <rectangle>
+                <reportElement x="0" y="5" width="535" height="30" backcolor="#1565C0" forecolor="#1565C0"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="5" width="335" height="30" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TOTAL:  ]]></text>
+            </staticText>
+            <textField pattern="#,##0.00">
+                <reportElement x="335" y="5" width="100" height="30" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TOTAL_MONTO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+</jasperReport>

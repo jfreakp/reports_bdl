@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar(activeMenu)"
+     id="menu"
+     class="bg-gray-900 min-h-screen z-10 text-slate-300 w-64 fixed left-0 top-0 h-screen overflow-y-auto">
+
+    <!-- Logo -->
+    <div class="my-4 px-6">
+        <h1 class="text-lg md:text-2xl font-bold text-white">Reportes<span class="text-blue-500">JR</span>.</h1>
+        <p class="text-slate-500 text-sm">Sistema de Reportes</p>
+    </div>
+
+    <!-- Profile -->
+    <div class="px-6 py-10">
+        <p class="text-slate-500">Welcome back,</p>
+        <a href="#" class="inline-flex space-x-2 items-center">
+            <span>
+                <img class="rounded-full w-8 h-8"
+                     src="https://lh3.googleusercontent.com/a/ACg8ocJpIahW0-ITH3oUyQIVxke9dY2SqkF4MWfpDBaaRi90bIh0d6raTZ59O7wMmz-Xfaskcid4bKFJhnyRhow6cStLQpObXvZm=s432-c-no"
+                     alt="Avatar">
+            </span>
+            <span class="text-sm md:text-base font-bold text-white">Juan Pablo Torres</span>
+        </a>
+    </div>
+
+    <!-- Navigation -->
+    <div id="nav" class="w-full px-6">
+
+        <!-- Dashboard -->
+        <a th:href="@{/}"
+           th:class="${activeMenu == 'dashboard'}
+               ? 'w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 bg-blue-800 transition ease-linear duration-150'
+               : 'w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 hover:bg-white/5 transition ease-linear duration-150'">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                </svg>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-lg font-bold leading-5 text-white">Dashboard</span>
+                <span class="text-sm text-white/50 hidden md:block">Data Overview</span>
+            </div>
+        </a>
+
+        
+        <!-- Reports -->
+        <a th:href="@{/reportes}"
+           th:class="${activeMenu == 'reports'}
+               ? 'w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 bg-blue-800 transition ease-linear duration-150'
+               : 'w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 hover:bg-white/5 transition ease-linear duration-150'">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
+                </svg>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-lg text-slate-300 font-bold leading-5">Reports</span>
+                <span class="text-sm text-slate-500 hidden md:block">Manage Reports</span>
+            </div>
+        </a>
+
+    </div>
+</div>
+</body>
+</html>

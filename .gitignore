@@ -1,0 +1,8 @@
+target/
+*.log
+*.tmp
+*.pdf
+*.xlsx
+*.iml
+.idea/
+.vscode/
