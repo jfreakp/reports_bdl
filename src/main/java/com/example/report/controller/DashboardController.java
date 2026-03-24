@@ -4,6 +4,7 @@ import com.example.report.repository.ClienteRepository;
 import com.example.report.repository.CuentaRepository;
 import com.example.report.repository.PrestamoRepository;
 import com.example.report.repository.TransaccionRepository;
+import com.example.report.service.VisitaPaginaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,12 +25,18 @@ public class DashboardController {
     @Autowired
     private PrestamoRepository prestamoRepository;
 
+    @Autowired
+    private VisitaPaginaService visitaPaginaService;
+
     @GetMapping("/")
     public String dashboard(Model model) {
+        long totalVisitasPagina = visitaPaginaService.incrementarYObtener();
+
         model.addAttribute("totalClientes", clienteRepository.count());
         model.addAttribute("totalCuentas", cuentaRepository.count());
         model.addAttribute("totalTransacciones", transaccionRepository.count());
         model.addAttribute("totalPrestamos", prestamoRepository.count());
+        model.addAttribute("visitasPagina", totalVisitasPagina);
         model.addAttribute("activeMenu", "dashboard");
         return "index";
     }
