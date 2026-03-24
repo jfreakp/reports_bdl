@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: reports-bdl
+    runtime: java
+    plan: free
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/report-0.0.1-SNAPSHOT.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_VERSION
+        value: "17"
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: SUPABASE_DB_USER
+        sync: false
+      - key: SUPABASE_DB_PASSWORD
+        sync: false
